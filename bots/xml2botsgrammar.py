@@ -3,11 +3,13 @@ import sys
 import inmessage
 import outmessage
 import botslib
+import botsinit
+import botsglobal
 from botsconfig import *
 
 #buggy
 #in usersys/grammars/xmlnocheck should be a file xmlnocheck
-#usage: c:\python25\python  start-xml2botsgrammar.py  botssys/infile/test.xml   botssys/infile/resultgrammar.py  -cconfig
+#usage: c:\python25\python  bots-xml2botsgrammar.py  botssys/infile/test.xml   botssys/infile/resultgrammar.py  -cconfig
 
 
 def treewalker(node,mpath):
@@ -82,13 +84,13 @@ def start():
     #********command line arguments**************************
     edifile =''
     grammarfile = ''
-    botsinifile = 'bots/config'
+    configdir = 'config'
     for arg in sys.argv[1:]:
         if not arg:
             continue
         if arg.startswith('-c'):
-            botsinifile = arg[2:]
-            if not botsinifile:
+            configdir = arg[2:]
+            if not configdir:
                 print '    !!Indicated Bots should use specific .ini file but no file name was given.'
                 showusage()
         elif arg in ["?", "/?"] or arg.startswith('-'):
@@ -108,9 +110,13 @@ def start():
     structure = []
     recorddefs = {}
     
-    botslib.initconfigurationfile(botsinifile)
-    botslib.initbotscharsets()
-    botslib.initlogging()
+    botsinit.generalinit(configdir)
+    os.chdir(botsglobal.ini.get('directories','botspath'))
+    botsinit.initenginelogging()
+    
+    #~ botslib.initconfigurationfile(botsinifile)
+    #~ botslib.initbotscharsets()
+    #~ botslib.initlogging()
     
     inn = inmessage.edifromfile(editype='xmlnocheck',messagetype='xmlnocheck',filename=edifile)
     out = outmessage.outmessage_init(editype='xmlnocheck',messagetype='xmlnocheck',filename='botssys/infile/unitnode/output/inisout03.edi',divtext='',topartner='')    #make outmessage object
@@ -145,7 +151,7 @@ def start():
     grammar.write('recorddefs = %s'%(recorddefsstring))
     grammar.write('\n\n')
     grammar.close()
-    print 'grammar file is written'
+    print 'grammar file is written',grammarfile
 
 if __name__ == '__main__':
     start()

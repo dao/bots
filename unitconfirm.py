@@ -130,7 +130,7 @@ class TestMain(unittest.TestCase):
 
 if __name__ == '__main__':
     shutil.rmtree(os.path.join(botssys, 'outfile'),ignore_errors=True)    #remove whole output directory
-    subprocess.call(['/home/hje/botsup/start-engine.py','-cconfig','--new'])
+    subprocess.call(['/home/hje/botsup/bots-engine.py','-cconfig','--new'])
     botsinit.generalinit('/home/hje/botsup/bots/config')
     #~ botslib.initbotscharsets()
     botsinit.initenginelogging()

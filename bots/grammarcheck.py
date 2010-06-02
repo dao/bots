@@ -1,5 +1,6 @@
 import sys
 import os
+import botsinit
 import botslib
 import grammar
 
